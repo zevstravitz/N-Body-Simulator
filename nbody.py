@@ -1,26 +1,28 @@
 from graphics import *
 import time
-import random
 import math
+import numpy as np
 
 #CONSTANTS
 TIMESTEP = 1/100
-FRAMERATE = 20
-BODIES = 3
+FRAMERATE = 1
+BODIES = 4
 HEIGHT = 800
 WIDTH = 1200
 SIZE = 3
-VEL = 100
+VEL = 10
 MASS = 5
-G_CONSTANT = 30
+G_CONSTANT = 3
 
 class Particle:
     def __init__(self):
-        self.x = random.randint(0, WIDTH)
-        self.vx = random.randint(-VEL, VEL)
-        self.y = random.randint(0, HEIGHT)
-        self.vy = random.randint(-VEL, VEL)
-        self.mass = random.randint(MASS, MASS * 5)
+        self.x = np.random.uniform(0, WIDTH, 1)[0]
+        self.vx = np.random.uniform(-VEL, VEL, 1)[0]
+        self.y = np.random.uniform(0, HEIGHT, 1)[0]
+        self.vy = np.random.uniform(-VEL, VEL, 1)[0]
+        self.ax = 0
+        self.ay = 0
+        self.mass = np.random.uniform(MASS, MASS * 5, 1)[0]
         self.size = self.mass / MASS * SIZE
 
     def _update_particle_pos(self):
@@ -34,7 +36,9 @@ class Particles:
             self.particles.append(Particle())
 
     def _update_velocities(self):
+
         for i in range(BODIES):
+            acc_vec = [0,0]
             for j in range(BODIES):
                 if i == j:
                     continue
@@ -43,10 +47,12 @@ class Particles:
                 dist = math.sqrt(dy**2 + dx**2)
                 unit_vector = [divide(dx, dist), divide(dy, dist)]
                 acc = G_CONSTANT*divide((self.particles[i].mass * self.particles[j].mass),(dist**2))
-                self.particles[i].vx += acc*unit_vector[0]
-                self.particles[i].vy += acc*unit_vector[1]
-                self.particles[j].vx += acc*unit_vector[0]
-                self.particles[j].vy += acc*unit_vector[1]
+
+                self.particles[i].ax += acc*unit_vector[0]
+                self.particles[i].ay += acc*unit_vector[1]
+
+            self.particles[i].vx -= self.particles[i].ax
+            self.particles[i].vy += self.particles[i].ay
 
 def divide(num, den):
     if den == 0:
@@ -69,7 +75,6 @@ if __name__ == "__main__":
         for i in range(BODIES):
             array_of_circles[i].move(bodies.particles[i].vx, bodies.particles[i].vy)
         time.sleep(TIMESTEP)
-        #print(bodies.particles[1].vx)
         bodies._update_velocities()
     win.getMouse()
     win.close()
