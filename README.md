@@ -25,7 +25,7 @@ When you run the program, you can get some pretty interesting behavior. Here are
 
 ## Limitations and Next Steps
 While I was able to generate the proper vector math simulate the n-body interactions in two dimensions with relative accuracy, there were a few areas where this project fell short:
-1. This algorithm runs in 0(n^2) time, meaning that the force on each particle is calculated by calculating the superposition of forces on that particle. I would next like to implement the [Barnes-Hut Algorithm](https://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation), which calculates the forces on each particle by generating an approximation only using particles nearby.
+1. This algorithm runs in 0(n^2) time, meaning that the force on each particle is calculated by summing forces on that particle. I would next like to implement the [Barnes-Hut Algorithm](https://en.wikipedia.org/wiki/Barnes%E2%80%93Hut_simulation), which calculates the forces on each particle by generating an approximation only using particles nearby.
 2. The behavior of the particles in very close proximity is erratic. When the distance between two particles gets very small, the acceleration becomes very large, and the particles can zip by one another.
 3. I'd like to try and implement a system where there would be a supermassive body (or two) located near the center of the display.
 
